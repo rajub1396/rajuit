@@ -1,6 +1,6 @@
 # RYT Video Downloader — Node.js + Render
 
-A Node.js website with a direct, resumable download of the supplied Android APK. No runtime dependencies, ad scripts, or tracking are installed.
+A Node.js website with a direct, resumable download of the supplied Android APK. No runtime dependencies are installed. The homepage includes the supplied Adsterra ad script.
 
 ## Run locally
 
@@ -27,4 +27,4 @@ Replace `downloads/RYT-universal.apk`, update the size shown in `public/index.ht
 
 ## Ads
 
-Two hidden placements remain in `public/index.html` after the description and installation guide. Add an approved provider's code and required privacy/consent handling before enabling them. No active ads are configured.
+The supplied Adsterra code is installed once in the labeled advertisement placement after the hero in `public/index.html`. The second placement remains hidden. Deploy the updated files to enable this code on the live website; actual ad delivery and earnings depend on Adsterra. Review the site's privacy/consent handling for the provider before publishing.
