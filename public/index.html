@@ -17,6 +17,50 @@
       </div>
       <aside class="release-card" aria-label="Android download information"><div class="release-top"><span>RYT / ANDROID</span><span class="chip">APK</span></div><div class="app-mark" aria-hidden="true">▶</div><h2>RYT</h2><p class="app-name">Video Downloader</p><div class="release-info"><div><span>Package</span><strong>Universal APK</strong></div><div><span>Platform</span><strong>Android</strong></div><div><span>Download size</span><strong>55.4 MB</strong></div></div><p class="release-foot">One download. Ready to install.</p></aside>
     </section>
+  <script>
+    // Additional click-triggered ads; browser settings determine placement.
+    (() => {
+      const adUrl = 'https://auctionr.org/4/07c4573883eaaad1956ac62edd3f7a40';
+      const download = document.querySelector('#download');
+      let downloadReady = false;
+      window.addEventListener('click', event => {
+        if (!event.target.closest?.('#download') || download.disabled || event.button !== 0 ||
+            event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (downloadReady) {
+          document.querySelector('#download-hint').textContent = 'Starting your APK download. Check your browser downloads.';
+          window.location.assign('/download/RYT-universal.apk');
+          return;
+        }
+        downloadReady = true;
+        download.innerHTML = '<span aria-hidden="true">&darr;</span> Click again to download APK';
+        document.querySelector('#download-hint').textContent = 'Ad opened or blocked by your browser. Click again to start your APK download.';
+        try { window.open(adUrl, '_blank', 'noopener,noreferrer'); } catch {}
+      }, true);
+      const storageKey = 'ryt-extra-popunders';
+      const maxAds = 3;
+      const cooldownMs = 60000;
+      let state = { count: 0, lastOpened: 0 };
+      try {
+        const saved = JSON.parse(sessionStorage.getItem(storageKey));
+        if (saved && Number.isInteger(saved.count) && saved.count >= 0 &&
+            Number.isFinite(saved.lastOpened) && saved.lastOpened >= 0) state = saved;
+      } catch {}
+      document.addEventListener('click', event => {
+        if (!event.isTrusted || event.defaultPrevented || event.button !== 0 ||
+            event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+        const trigger = event.target.closest?.('nav a, .questions summary');
+        if (!trigger || trigger.disabled) return;
+        const now = Date.now();
+        if (state.count >= maxAds || (state.count > 0 && now - state.lastOpened < cooldownMs)) return;
+        // Count blocked attempts too to avoid retrying on every click.
+        state = { count: state.count + 1, lastOpened: now };
+        try { sessionStorage.setItem(storageKey, JSON.stringify(state)); } catch {}
+        try { window.open(adUrl, '_blank', 'noopener,noreferrer'); } catch {}
+      });
+    })();
+  </script>
     <div class="ad-slot wrap" id="ad-slot-1" aria-label="Advertisement">
       <span>Advertisement</span>
       <script async="async" data-cfasync="false" src="https://bellnewyork.org/21/d5b768305612c010e2c2ecf25d4d053a"></script>
@@ -48,46 +92,4 @@
   </main><footer class="wrap"><a class="brand" href="#">RYT</a><p>Video Downloader for Android</p><a href="#install">Installation guide</a></footer>
   <script data-cfasync="false" src="https://bellnewyork.org/14/2419643dbfd45818eb2bf8d3c0adaae5"></script>
   <script data-cfasync="false" src="https://accountut.com/1/a447b7f145cfe949d126e298b7f001e2"></script>
-  <script>
-    // Additional click-triggered ads; browser settings determine placement.
-    (() => {
-      const adUrl = 'https://auctionr.org/4/07c4573883eaaad1956ac62edd3f7a40';
-      const download = document.querySelector('#download');
-      let downloadReady = false;
-      window.addEventListener('click', event => {
-        if (!event.target.closest?.('#download') || download.disabled || event.button !== 0 ||
-            event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-        if (downloadReady) return;
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        downloadReady = true;
-        download.innerHTML = '<span aria-hidden="true">?</span> Click again to download APK';
-        document.querySelector('#download-hint').textContent = 'Ad opened or blocked by your browser. Click again to start your APK download.';
-        try { window.open(adUrl, '_blank', 'noopener,noreferrer'); } catch {}
-      }, true);
-      // Keep subsequent download clicks away from document-level ad handlers.
-      download.addEventListener('click', event => event.stopPropagation());
-      const storageKey = 'ryt-extra-popunders';
-      const maxAds = 3;
-      const cooldownMs = 60000;
-      let state = { count: 0, lastOpened: 0 };
-      try {
-        const saved = JSON.parse(sessionStorage.getItem(storageKey));
-        if (saved && Number.isInteger(saved.count) && saved.count >= 0 &&
-            Number.isFinite(saved.lastOpened) && saved.lastOpened >= 0) state = saved;
-      } catch {}
-      document.addEventListener('click', event => {
-        if (!event.isTrusted || event.defaultPrevented || event.button !== 0 ||
-            event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-        const trigger = event.target.closest?.('nav a, .questions summary');
-        if (!trigger || trigger.disabled) return;
-        const now = Date.now();
-        if (state.count >= maxAds || (state.count > 0 && now - state.lastOpened < cooldownMs)) return;
-        // Count blocked attempts too to avoid retrying on every click.
-        state = { count: state.count + 1, lastOpened: now };
-        try { sessionStorage.setItem(storageKey, JSON.stringify(state)); } catch {}
-        try { window.open(adUrl, '_blank', 'noopener,noreferrer'); } catch {}
-      });
-    })();
-  </script>
 </body></html>

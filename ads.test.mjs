@@ -7,9 +7,11 @@ test('first download click opens an ad; second downloads even when the ad is blo
   const page = readFileSync(new URL('public/index.html', import.meta.url), 'utf8');
   const script = page.match(/<script>\s*\/\/ Additional[\s\S]*?<\/script>/)[0]
     .replace(/^<script>/, '').replace(/<\/script>$/, '');
+  assert.ok(page.indexOf('// Additional') < page.indexOf('src="https://'));
   for (const blocked of [false, true]) {
-    let capture, targetClick, ads = 0;
-    const download = { addEventListener: (_, listener) => targetClick = listener };
+    let capture, ads = 0;
+    const downloads = [];
+    const download = {};
     const hint = {};
     runInNewContext(script, {
       document: {
@@ -18,7 +20,8 @@ test('first download click opens an ad; second downloads even when the ad is blo
       },
       window: {
         addEventListener: (_, listener) => capture = listener,
-        open() { ads++; if (blocked) throw new Error('Blocked'); }
+        open() { ads++; if (blocked) throw new Error('Blocked'); },
+        location: { assign: url => downloads.push(url) }
       },
       sessionStorage: { getItem: () => null },
     });
@@ -33,12 +36,16 @@ test('first download click opens an ad; second downloads even when the ad is blo
     assert.equal(first.prevented, true);
     assert.equal(first.stopped, true);
     assert.equal(ads, 1);
+    assert.deepEqual(downloads, []);
     assert.match(download.innerHTML, /Click again/);
-    const second = click(); capture(second); targetClick(second);
-    assert.equal(second.prevented, false);
+    const second = click(); capture(second);
+    assert.equal(second.prevented, true);
+    assert.equal(second.stopped, true);
+    assert.deepEqual(downloads, ['/download/RYT-universal.apk']);
     assert.equal(ads, 1);
     const third = click(); capture(third);
-    assert.equal(third.prevented, false);
+    assert.equal(third.prevented, true);
+    assert.equal(downloads.length, 2);
     assert.equal(ads, 1);
   }
 });
