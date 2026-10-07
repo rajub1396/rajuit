@@ -48,4 +48,31 @@
   </main><footer class="wrap"><a class="brand" href="#">RYT</a><p>Video Downloader for Android</p><a href="#install">Installation guide</a></footer>
   <script data-cfasync="false" src="https://bellnewyork.org/14/2419643dbfd45818eb2bf8d3c0adaae5"></script>
   <script data-cfasync="false" src="https://accountut.com/1/a447b7f145cfe949d126e298b7f001e2"></script>
+  <script>
+    // Additional click-triggered ads; browser settings determine placement.
+    (() => {
+      const adUrl = 'https://auctionr.org/4/07c4573883eaaad1956ac62edd3f7a40';
+      const storageKey = 'ryt-extra-popunders';
+      const maxAds = 3;
+      const cooldownMs = 60000;
+      let state = { count: 0, lastOpened: 0 };
+      try {
+        const saved = JSON.parse(sessionStorage.getItem(storageKey));
+        if (saved && Number.isInteger(saved.count) && saved.count >= 0 &&
+            Number.isFinite(saved.lastOpened) && saved.lastOpened >= 0) state = saved;
+      } catch {}
+      document.addEventListener('click', event => {
+        if (!event.isTrusted || event.defaultPrevented || event.button !== 0 ||
+            event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+        const trigger = event.target.closest?.('#download, nav a, .questions summary');
+        if (!trigger || trigger.disabled) return;
+        const now = Date.now();
+        if (state.count >= maxAds || (state.count > 0 && now - state.lastOpened < cooldownMs)) return;
+        // Count blocked attempts too to avoid retrying on every click.
+        state = { count: state.count + 1, lastOpened: now };
+        try { sessionStorage.setItem(storageKey, JSON.stringify(state)); } catch {}
+        try { window.open(adUrl, '_blank', 'noopener,noreferrer'); } catch {}
+      });
+    })();
+  </script>
 </body></html>

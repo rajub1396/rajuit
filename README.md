@@ -28,3 +28,5 @@ Replace `downloads/RYT-universal.apk`, update the size shown in `public/index.ht
 ## Ads
 
 The supplied Adsterra code is installed once in the labeled advertisement placement after the hero in `public/index.html`. The second placement remains hidden. Deploy the updated files to enable this code on the live website; actual ad delivery and earnings depend on Adsterra. Review the site's privacy/consent handling for the provider before publishing.
+
+Additional click-triggered ads use the existing sponsored URL on Download APK, main navigation, and FAQ clicks: up to three attempts per tab session, at least 60 seconds apart. Browser settings control ad opening and placement. Existing provider scripts serve ads independently of this limit.
