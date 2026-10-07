@@ -2,94 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>RYT Video Downloader — Download for Android</title>
-  <meta name="description" content="Download RYT Video Downloader for Android. Get the universal APK and follow the step-by-step installation guide.">
+  <title>R Apps &mdash; Android APK Downloads</title>
+  <meta name="description" content="Find RYT, RVpn, RPlayer, RTik and RIns for Android. Choose an app to open its APK download page.">
   <meta name="theme-color" content="#10151c">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2310151c'/%3E%3Cpath d='M25 17v30l23-15z' fill='%23ccff5f'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2310151c'/%3E%3Ctext x='32' y='45' text-anchor='middle' font-family='sans-serif' font-size='44' font-weight='bold' fill='%23ccff5f'%3ER%3C/text%3E%3C/svg%3E">
 </head>
 <body>
-  <header class="nav wrap"><a class="brand" href="#" aria-label="RYT home"><span class="mark" aria-hidden="true">▶</span> RYT<span class="brand-note">VIDEO DOWNLOADER</span></a><nav aria-label="Main navigation"><a href="#install">How to install</a><a href="#faq">FAQ</a></nav></header>
+  <header class="nav wrap"><a class="brand" href="/" aria-label="R Apps home"><span class="mark" aria-hidden="true">R</span> R Apps<span class="brand-note">ANDROID APPS</span></a><nav aria-label="Main navigation"><a href="#apps">Explore apps</a><a href="#install">How to install</a></nav></header>
   <main>
-    <section class="hero wrap" aria-labelledby="title">
-      <div class="hero-copy"><p class="eyebrow"><span class="android" aria-hidden="true">●</span> MADE FOR ANDROID</p><h1 id="title">Your videos.<br><span>Your way.</span></h1><p class="intro">Get RYT Video Downloader on your Android device. Download the APK and get started in a few simple steps.</p>
-      <a class="download" id="download" href="/download/RYT-universal.apk" download="RYT-universal.apk"><span aria-hidden="true">↓</span> Download APK</a><p id="download-hint" role="status" aria-live="polite">First click opens an ad. Click again to download the APK.</p><p class="download-meta">Universal APK <span>·</span> <span id="file-size">55.4 MB</span></p>
-      </div>
-      <aside class="release-card" aria-label="Android download information"><div class="release-top"><span>RYT / ANDROID</span><span class="chip">APK</span></div><div class="app-mark" aria-hidden="true">▶</div><h2>RYT</h2><p class="app-name">Video Downloader</p><div class="release-info"><div><span>Package</span><strong>Universal APK</strong></div><div><span>Platform</span><strong>Android</strong></div><div><span>Download size</span><strong>55.4 MB</strong></div></div><p class="release-foot">One download. Ready to install.</p></aside>
-    </section>
-  <script>
-    // Additional click-triggered ads; browser settings determine placement.
-    (() => {
-      const adUrl = 'https://auctionr.org/4/07c4573883eaaad1956ac62edd3f7a40';
-      const download = document.querySelector('#download');
-      let downloadReady = false;
-      window.addEventListener('click', event => {
-        if (!event.target.closest?.('#download') || download.disabled || event.button !== 0 ||
-            event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        if (downloadReady) {
-          document.querySelector('#download-hint').textContent = 'Starting your APK download. Check your browser downloads.';
-          window.location.assign('/download/RYT-universal.apk');
-          return;
-        }
-        downloadReady = true;
-        download.innerHTML = '<span aria-hidden="true">&darr;</span> Click again to download APK';
-        document.querySelector('#download-hint').textContent = 'Ad opened or blocked by your browser. Click again to start your APK download.';
-        try { window.open(adUrl, '_blank', 'noopener,noreferrer'); } catch {}
-      }, true);
-      const storageKey = 'ryt-extra-popunders';
-      const maxAds = 3;
-      const cooldownMs = 60000;
-      let state = { count: 0, lastOpened: 0 };
-      try {
-        const saved = JSON.parse(sessionStorage.getItem(storageKey));
-        if (saved && Number.isInteger(saved.count) && saved.count >= 0 &&
-            Number.isFinite(saved.lastOpened) && saved.lastOpened >= 0) state = saved;
-      } catch {}
-      document.addEventListener('click', event => {
-        if (!event.isTrusted || event.defaultPrevented || event.button !== 0 ||
-            event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-        const trigger = event.target.closest?.('nav a, .questions summary');
-        if (!trigger || trigger.disabled) return;
-        const now = Date.now();
-        if (state.count >= maxAds || (state.count > 0 && now - state.lastOpened < cooldownMs)) return;
-        // Count blocked attempts too to avoid retrying on every click.
-        state = { count: state.count + 1, lastOpened: now };
-        try { sessionStorage.setItem(storageKey, JSON.stringify(state)); } catch {}
-        try { window.open(adUrl, '_blank', 'noopener,noreferrer'); } catch {}
-      });
-    })();
-  </script>
+    <section class="hub-hero wrap" aria-labelledby="title"><p class="eyebrow">THE R APP COLLECTION / ANDROID</p><h1 id="title">Your apps.<br><span>One place.</span></h1><p class="intro">RYT, RVpn, RPlayer, RTik and RIns. Choose your app, open its page and get the Android APK.</p><a class="browse-link" href="#apps">Explore the collection <span aria-hidden="true">&darr;</span></a></section>
+    <section class="collection wrap" id="apps" aria-labelledby="apps-title"><div class="collection-heading"><div><p class="eyebrow">CHOOSE YOUR APP</p><h2 id="apps-title">The collection.</h2></div><p>Five apps. A page for each.</p></div><div class="app-grid">{{APP_CARDS}}</div></section>
     <div class="ad-slot wrap" id="ad-slot-1" aria-label="Advertisement">
       <span>Advertisement</span>
       <script async="async" data-cfasync="false" src="https://bellnewyork.org/21/d5b768305612c010e2c2ecf25d4d053a"></script>
       <div id="container-d5b768305612c010e2c2ecf25d4d053a"></div>
     </div>
-    <section class="install wrap" id="install" aria-labelledby="install-title"><div class="section-heading"><p class="eyebrow">GETTING STARTED</p><h2 id="install-title">On your phone in three steps.</h2><p>You install this app using an APK file.</p></div><div class="steps"><article><span class="step-number">01</span><h3>Download the APK</h3><p>Tap Download APK above. Wait for the file to finish downloading, then find <strong>RYT-universal.apk</strong> in your Downloads folder.</p></article><article><span class="step-number">02</span><h3>Allow installation</h3><p>If Android asks, open Settings and allow “Install unknown apps” for the browser or file manager you’re using. Only install files from sources you trust.</p></article><article><span class="step-number">03</span><h3>Install & open</h3><p>Open the APK and tap Install. Once installation finishes, open RYT. You can turn the installation permission off again afterward.</p></article></div></section>
-    <div class="ad-slot wrap" id="ad-slot-2" aria-label="Advertisement">
-      <span>Advertisement</span>
-      <p><a href="https://auctionr.org/4/07c4573883eaaad1956ac62edd3f7a40" target="_blank" rel="sponsored noopener noreferrer" aria-label="Sponsored link (opens in a new tab)" style="text-decoration:underline">Sponsored link</a></p>
-    </div>
-    <div class="ad-slot wrap" id="ad-slot-banner" aria-label="Advertisement">
-      <span>Advertisement</span>
-      <div style="max-width:100%;overflow-x:auto">
-        <div style="width:728px;min-height:90px;margin:12px auto 0">
-          <script>
-            atOptions = {
-              'key' : 'b5674928314795863ff1c9be73ca0078',
-              'format' : 'iframe',
-              'height' : 90,
-              'width' : 728,
-              'params' : {}
-            };
-          </script>
-          <script src="https://bellnewyork.org/22/b5674928314795863ff1c9be73ca0078"></script>
-        </div>
-      </div>
-    </div>
-    <section class="faq wrap" id="faq" aria-labelledby="faq-title"><div><p class="eyebrow">GOOD TO KNOW</p><h2 id="faq-title">A few quick answers.</h2></div><div class="questions"><details><summary>What is a universal APK?</summary><p>It is an Android installation package that includes support for multiple processor architectures in one file.</p></details><details><summary>Can I install RYT on an iPhone?</summary><p>No. This APK is for Android devices. iPhones cannot install Android APK files.</p></details><details><summary>Where is my downloaded file?</summary><p>Look in your browser’s Downloads list or the Downloads folder in your file manager. The file is named RYT-universal.apk.</p></details><details><summary>What if the download or installation fails?</summary><p>Check your internet connection and available storage, then try again. If Android says the app is incompatible, this release may not support your device. Do not bypass device security warnings.</p></details><details><summary>Which videos can I download?</summary><p>Download only content you own or have permission to download, and follow the content provider’s terms.</p></details></div></section>
-  </main><footer class="wrap"><a class="brand" href="#">RYT</a><p>Video Downloader for Android</p><a href="#install">Installation guide</a></footer>
-  <script data-cfasync="false" src="https://bellnewyork.org/14/2419643dbfd45818eb2bf8d3c0adaae5"></script>
-  <script data-cfasync="false" src="https://accountut.com/1/a447b7f145cfe949d126e298b7f001e2"></script>
+    <section class="install wrap" id="install" aria-labelledby="install-title"><div class="section-heading"><p class="eyebrow">GETTING STARTED</p><h2 id="install-title">From download to your phone.</h2><p>Each app has its own APK and download page.</p></div><div class="steps"><article><span class="step-number">01</span><h3>Choose an app</h3><p>Open an app from the collection above. Its page shows whether the APK is ready to download.</p></article><article><span class="step-number">02</span><h3>Download the APK</h3><p>For an available APK, the first click opens an ad. Click the button again to start the download.</p></article><article><span class="step-number">03</span><h3>Install on Android</h3><p>Open the file from Downloads. If Android asks, allow installation for your browser or file manager. Only install files from sources you trust.</p></article></div></section>
+  </main><footer class="wrap"><a class="brand" href="/">R Apps</a><p>RYT &middot; RVpn &middot; RPlayer &middot; RTik &middot; RIns</p><a href="#apps">All apps</a></footer>
 </body></html>

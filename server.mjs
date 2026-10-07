@@ -2,18 +2,14 @@ import { createServer } from 'node:http';
 import { createReadStream, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
+import { apps, apkPath, apkSize, renderHome, renderApp } from './apps.mjs';
 
 const root = fileURLToPath(new URL('.', import.meta.url));
-const apk = resolve(root, 'downloads/RYT-universal.apk');
-const apkSize = statSync(apk).size;
 const routes = new Map([
-  ['/', ['public/index.html', 'text/html; charset=utf-8']],
-  ['/index.html', ['public/index.html', 'text/html; charset=utf-8']],
   ['/styles.css', ['public/styles.css', 'text/css; charset=utf-8']],
-  ['/download/RYT-universal.apk', ['downloads/RYT-universal.apk', 'application/vnd.android.package-archive']]
 ]);
 
-export function createApp() {
+export function createApp({ downloadsDirectory } = {}) {
   return createServer((req, res) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
@@ -28,16 +24,28 @@ export function createApp() {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       return res.end(req.method === 'HEAD' ? undefined : '{"status":"ok"}');
     }
-    const route = routes.get(pathname);
+    const app = apps.find(item => pathname === `/apps/${item.slug}` || pathname === `/apps/${item.slug}/`);
+    if (pathname === '/' || pathname === '/index.html' || app) {
+      const html = app ? renderApp(app, downloadsDirectory) : renderHome(downloadsDirectory);
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache', 'Content-Length': Buffer.byteLength(html) });
+      return res.end(req.method === 'HEAD' ? undefined : html);
+    }
+    const downloadApp = apps.find(item => pathname === `/download/${item.file}`);
+    const downloadSize = downloadApp ? apkSize(downloadApp, downloadsDirectory) : null;
+    if (downloadApp && downloadSize === null) {
+      res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+      return res.end(req.method === 'HEAD' ? undefined : `${downloadApp.name} APK is coming soon.`);
+    }
+    const route = downloadApp ? [null, 'application/vnd.android.package-archive'] : routes.get(pathname);
     if (!route) { res.writeHead(404); return res.end('Not found'); }
     const [relative, contentType] = route;
-    const filename = resolve(root, relative);
-    const isApk = filename === apk;
-    const size = isApk ? apkSize : statSync(filename).size;
+    const filename = downloadApp ? apkPath(downloadApp, downloadsDirectory) : resolve(root, relative);
+    const isApk = Boolean(downloadApp);
+    const size = isApk ? downloadSize : statSync(filename).size;
     let start = 0, end = size - 1, status = 200;
     const headers = { 'Content-Type': contentType, 'Cache-Control': 'no-cache' };
     if (isApk) {
-      headers['Content-Disposition'] = 'attachment; filename="RYT-universal.apk"';
+      headers['Content-Disposition'] = `attachment; filename="${downloadApp.file}"`;
       headers['Accept-Ranges'] = 'bytes';
       // HTTP Range lets browsers resume interrupted APK downloads.
       if (req.headers.range && req.method === 'GET') {

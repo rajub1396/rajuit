@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{NAME}} {{CATEGORY}} — Download for Android</title>
+  <meta name="description" content="Download {{NAME}} {{CATEGORY}} for Android. Get the Android APK and follow the step-by-step installation guide.">
+  <meta name="theme-color" content="#10151c">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2310151c'/%3E%3Cpath d='M25 17v30l23-15z' fill='%23ccff5f'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body style="--accent:{{COLOR}}">
+  <header class="nav wrap"><a class="brand" href="/" aria-label="R Apps home"><span class="mark" aria-hidden="true">R</span> R Apps<span class="brand-note">ANDROID APPS</span></a><nav aria-label="Main navigation"><a href="/">All apps</a><a href="#install">How to install</a><a href="#faq">FAQ</a></nav></header>
+  <main>
+    <section class="hero wrap" aria-labelledby="title">
+      <div class="hero-copy"><p class="eyebrow"><span class="android" aria-hidden="true">●</span> MADE FOR ANDROID</p><h1 id="title">{{NAME}}<br><span>for Android.</span></h1><p class="intro">{{DESCRIPTION}} Download the APK here when it is available.</p>
+      <a class="download" id="download" data-available="{{AVAILABLE}}" href="/download/{{FILE}}" download="{{FILE}}"><span aria-hidden="true">↓</span> Download APK</a><p id="download-hint" role="status" aria-live="polite">{{HINT}}</p><p class="download-meta">Android APK <span>·</span> <span id="file-size">{{SIZE}}</span></p>
+      </div>
+      <aside class="release-card" aria-label="Android download information"><div class="release-top"><span>{{NAME}} / ANDROID</span><span class="chip">APK</span></div><div class="app-mark" aria-hidden="true">{{ICON}}</div><h2>{{NAME}}</h2><p class="app-name">{{CATEGORY}}</p><div class="release-info"><div><span>Package</span><strong>Android APK</strong></div><div><span>Platform</span><strong>Android</strong></div><div><span>Download size</span><strong>{{SIZE}}</strong></div></div><p class="release-foot">{{RELEASE_FOOT}}</p></aside>
+    </section>
+  <script>
+    // Additional click-triggered ads; browser settings determine placement.
+    (() => {
+      const adUrl = 'https://auctionr.org/4/07c4573883eaaad1956ac62edd3f7a40';
+      const download = document.querySelector('#download');
+      let downloadReady = false;
+      window.addEventListener('click', event => {
+        if (!event.target.closest?.('#download') || download.disabled || event.button !== 0 ||
+            event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (download.dataset.available !== 'true') {
+          document.querySelector('#download-hint').textContent = 'This APK is coming soon. Please check back later.';
+          return;
+        }
+        if (downloadReady) {
+          document.querySelector('#download-hint').textContent = 'Starting your APK download. Check your browser downloads.';
+          window.location.assign(download.href);
+          return;
+        }
+        downloadReady = true;
+        download.innerHTML = '<span aria-hidden="true">&darr;</span> Click again to download APK';
+        document.querySelector('#download-hint').textContent = 'Ad opened or blocked by your browser. Click again to start your APK download.';
+        try { window.open(adUrl, '_blank', 'noopener,noreferrer'); } catch {}
+      }, true);
+      const storageKey = 'ryt-extra-popunders';
+      const maxAds = 3;
+      const cooldownMs = 60000;
+      let state = { count: 0, lastOpened: 0 };
+      try {
+        const saved = JSON.parse(sessionStorage.getItem(storageKey));
+        if (saved && Number.isInteger(saved.count) && saved.count >= 0 &&
+            Number.isFinite(saved.lastOpened) && saved.lastOpened >= 0) state = saved;
+      } catch {}
+      document.addEventListener('click', event => {
+        if (!event.isTrusted || event.defaultPrevented || event.button !== 0 ||
+            event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+        const trigger = event.target.closest?.('nav a, .questions summary');
+        if (!trigger || trigger.disabled) return;
+        const now = Date.now();
+        if (state.count >= maxAds || (state.count > 0 && now - state.lastOpened < cooldownMs)) return;
+        // Count blocked attempts too to avoid retrying on every click.
+        state = { count: state.count + 1, lastOpened: now };
+        try { sessionStorage.setItem(storageKey, JSON.stringify(state)); } catch {}
+        try { window.open(adUrl, '_blank', 'noopener,noreferrer'); } catch {}
+      });
+    })();
+  </script>
+    <div class="ad-slot wrap" id="ad-slot-1" aria-label="Advertisement">
+      <span>Advertisement</span>
+      <script async="async" data-cfasync="false" src="https://bellnewyork.org/21/d5b768305612c010e2c2ecf25d4d053a"></script>
+      <div id="container-d5b768305612c010e2c2ecf25d4d053a"></div>
+    </div>
+    <section class="install wrap" id="install" aria-labelledby="install-title"><div class="section-heading"><p class="eyebrow">GETTING STARTED</p><h2 id="install-title">On your phone in three steps.</h2><p>You install this app using an APK file.</p></div><div class="steps"><article><span class="step-number">01</span><h3>Download the APK</h3><p>Tap Download APK above. Wait for the file to finish downloading, then find <strong>{{FILE}}</strong> in your Downloads folder.</p></article><article><span class="step-number">02</span><h3>Allow installation</h3><p>If Android asks, open Settings and allow “Install unknown apps” for the browser or file manager you’re using. Only install files from sources you trust.</p></article><article><span class="step-number">03</span><h3>Install & open</h3><p>Open the APK and tap Install. Once installation finishes, open {{NAME}}. You can turn the installation permission off again afterward.</p></article></div></section>
+    <div class="ad-slot wrap" id="ad-slot-2" aria-label="Advertisement">
+      <span>Advertisement</span>
+      <p><a href="https://auctionr.org/4/07c4573883eaaad1956ac62edd3f7a40" target="_blank" rel="sponsored noopener noreferrer" aria-label="Sponsored link (opens in a new tab)" style="text-decoration:underline">Sponsored link</a></p>
+    </div>
+    <div class="ad-slot wrap" id="ad-slot-banner" aria-label="Advertisement">
+      <span>Advertisement</span>
+      <div style="max-width:100%;overflow-x:auto">
+        <div style="width:728px;min-height:90px;margin:12px auto 0">
+          <script>
+            atOptions = {
+              'key' : 'b5674928314795863ff1c9be73ca0078',
+              'format' : 'iframe',
+              'height' : 90,
+              'width' : 728,
+              'params' : {}
+            };
+          </script>
+          <script src="https://bellnewyork.org/22/b5674928314795863ff1c9be73ca0078"></script>
+        </div>
+      </div>
+    </div>
+    <section class="faq wrap" id="faq" aria-labelledby="faq-title"><div><p class="eyebrow">GOOD TO KNOW</p><h2 id="faq-title">A few quick answers.</h2></div><div class="questions"><details><summary>What is an Android APK?</summary><p>An APK is an Android installation file. Download it, then open it on your Android device to install the app.</p></details><details><summary>Can I install {{NAME}} on an iPhone?</summary><p>No. This APK is for Android devices. iPhones cannot install Android APK files.</p></details><details><summary>Where is my downloaded file?</summary><p>Look in your browser’s Downloads list or the Downloads folder in your file manager. The file is named {{FILE}}.</p></details><details><summary>What if the download or installation fails?</summary><p>Check your internet connection and available storage, then try again. If Android says the app is incompatible, this release may not support your device. Do not bypass device security warnings.</p></details><details><summary>What if an APK is coming soon?</summary><p>The download button will become available when the app is released here. Check this page again later.</p></details></div></section>
+  </main><footer class="wrap"><a class="brand" href="/">R Apps</a><p>{{CATEGORY}} for Android</p><a href="#install">Installation guide</a></footer>
+  <script data-cfasync="false" src="https://bellnewyork.org/14/2419643dbfd45818eb2bf8d3c0adaae5"></script>
+  <script data-cfasync="false" src="https://accountut.com/1/a447b7f145cfe949d126e298b7f001e2"></script>
+</body></html>
