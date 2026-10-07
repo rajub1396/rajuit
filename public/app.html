@@ -8,14 +8,15 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2310151c'/%3E%3Cpath d='M25 17v30l23-15z' fill='%23ccff5f'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="/styles.css">
 </head>
-<body style="--accent:{{COLOR}}">
+<body class="app-page" style="--accent:{{COLOR}}">
   <header class="nav wrap"><a class="brand" href="/" aria-label="R Apps home"><span class="mark" aria-hidden="true">R</span> R Apps<span class="brand-note">ANDROID APPS</span></a><nav aria-label="Main navigation"><a href="/">All apps</a><a href="#install">How to install</a><a href="#faq">FAQ</a></nav></header>
   <main>
+    <div class="breadcrumbs wrap"><a href="/">All apps</a><span aria-hidden="true">/</span><span>{{NAME}}</span></div>
     <section class="hero wrap" aria-labelledby="title">
-      <div class="hero-copy"><p class="eyebrow"><span class="android" aria-hidden="true">●</span> MADE FOR ANDROID</p><h1 id="title">{{NAME}}<br><span>for Android.</span></h1><p class="intro">{{DESCRIPTION}} Download the APK here when it is available.</p>
+      <div class="hero-copy"><p class="hero-label"><span class="status-dot" aria-hidden="true"></span> {{CATEGORY}} &middot; Android</p><h1 id="title">{{NAME}}<br><span>for Android.</span></h1><p class="intro">{{DESCRIPTION}} Your APK download, all in one place.</p>
       <a class="download" id="download" data-available="{{AVAILABLE}}" href="/download/{{FILE}}" download="{{FILE}}"><span aria-hidden="true">↓</span> Download APK</a><p id="download-hint" role="status" aria-live="polite">{{HINT}}</p><p class="download-meta">Android APK <span>·</span> <span id="file-size">{{SIZE}}</span></p>
       </div>
-      <aside class="release-card" aria-label="Android download information"><div class="release-top"><span>{{NAME}} / ANDROID</span><span class="chip">APK</span></div><div class="app-mark" aria-hidden="true">{{ICON}}</div><h2>{{NAME}}</h2><p class="app-name">{{CATEGORY}}</p><div class="release-info"><div><span>Package</span><strong>Android APK</strong></div><div><span>Platform</span><strong>Android</strong></div><div><span>Download size</span><strong>{{SIZE}}</strong></div></div><p class="release-foot">{{RELEASE_FOOT}}</p></aside>
+      <aside class="release-card" aria-label="Android download information"><div class="release-top"><span>THE R COLLECTION</span><span class="chip">ANDROID</span></div><div class="app-mark">{{APP_ICON}}</div><h2>{{NAME}}</h2><p class="app-name">{{CATEGORY}}</p><div class="release-info"><div><span>Package</span><strong>Android APK</strong></div><div><span>Platform</span><strong>Android</strong></div><div><span>Download size</span><strong>{{SIZE}}</strong></div></div><p class="release-foot">{{RELEASE_FOOT}}</p></aside>
     </section>
   <script>
     // Additional click-triggered ads; browser settings determine placement.
