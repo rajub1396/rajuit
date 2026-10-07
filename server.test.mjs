@@ -25,7 +25,7 @@ test('serves the website and an exact, resumable APK without exposing source fil
     assert.match(html, /id="download"/);
     assert.match(html, /href="\/styles.css"/);
     assert.doesNotMatch(html, /\{\{\w+\}\}/);
-    assert.match(html, new RegExp(`data-available="${slug === 'ryt' || slug === 'rvpn'}"`));
+    assert.match(html, new RegExp(`data-available="${['ryt', 'rvpn', 'rplayer'].includes(slug)}"`));
   }
   assert.match(await (await fetch(origin + '/apps/ryt')).text(), /href="\/download\/RYT-universal.apk"/);
   assert.equal((await fetch(origin + '/apps/unknown')).status, 404);
@@ -35,7 +35,12 @@ test('serves the website and an exact, resumable APK without exposing source fil
   const vpnDownload = await fetch(origin + '/download/RVpn.apk');
   assert.equal(vpnDownload.status, 200);
   assert.deepEqual(Buffer.from(await vpnDownload.arrayBuffer()), vpnExpected);
-  assert.equal((await fetch(origin + '/download/RPlayer.apk')).status, 404);
+  const playerExpected = readFileSync(new URL('downloads/RPlayer.apk', import.meta.url));
+  const playerPage = await (await fetch(origin + '/apps/rplayer')).text();
+  assert.match(playerPage, /href="\/download\/RPlayer.apk"/);
+  const playerDownload = await fetch(origin + '/download/RPlayer.apk');
+  assert.equal(playerDownload.status, 200);
+  assert.deepEqual(Buffer.from(await playerDownload.arrayBuffer()), playerExpected);
   assert.equal((await fetch(origin + '/styles.css')).status, 200);
   assert.deepEqual(await (await fetch(origin + '/healthz')).json(), { status: 'ok' });
   assert.equal((await fetch(origin + '/server.mjs')).status, 404);
