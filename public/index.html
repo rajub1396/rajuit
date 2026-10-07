@@ -13,7 +13,7 @@
   <main>
     <section class="hero wrap" aria-labelledby="title">
       <div class="hero-copy"><p class="eyebrow"><span class="android" aria-hidden="true">●</span> MADE FOR ANDROID</p><h1 id="title">Your videos.<br><span>Your way.</span></h1><p class="intro">Get RYT Video Downloader on your Android device. Download the APK and get started in a few simple steps.</p>
-      <a class="download" id="download" href="/download/RYT-universal.apk" download="RYT-universal.apk"><span aria-hidden="true">↓</span> Download APK</a><p class="download-meta">Universal APK <span>·</span> <span id="file-size">55.4 MB</span></p>
+      <a class="download" id="download" href="/download/RYT-universal.apk" download="RYT-universal.apk"><span aria-hidden="true">↓</span> Download APK</a><p id="download-hint" role="status" aria-live="polite">First click opens an ad. Click again to download the APK.</p><p class="download-meta">Universal APK <span>·</span> <span id="file-size">55.4 MB</span></p>
       </div>
       <aside class="release-card" aria-label="Android download information"><div class="release-top"><span>RYT / ANDROID</span><span class="chip">APK</span></div><div class="app-mark" aria-hidden="true">▶</div><h2>RYT</h2><p class="app-name">Video Downloader</p><div class="release-info"><div><span>Package</span><strong>Universal APK</strong></div><div><span>Platform</span><strong>Android</strong></div><div><span>Download size</span><strong>55.4 MB</strong></div></div><p class="release-foot">One download. Ready to install.</p></aside>
     </section>
@@ -52,6 +52,21 @@
     // Additional click-triggered ads; browser settings determine placement.
     (() => {
       const adUrl = 'https://auctionr.org/4/07c4573883eaaad1956ac62edd3f7a40';
+      const download = document.querySelector('#download');
+      let downloadReady = false;
+      window.addEventListener('click', event => {
+        if (!event.target.closest?.('#download') || download.disabled || event.button !== 0 ||
+            event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+        if (downloadReady) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        downloadReady = true;
+        download.innerHTML = '<span aria-hidden="true">?</span> Click again to download APK';
+        document.querySelector('#download-hint').textContent = 'Ad opened or blocked by your browser. Click again to start your APK download.';
+        try { window.open(adUrl, '_blank', 'noopener,noreferrer'); } catch {}
+      }, true);
+      // Keep subsequent download clicks away from document-level ad handlers.
+      download.addEventListener('click', event => event.stopPropagation());
       const storageKey = 'ryt-extra-popunders';
       const maxAds = 3;
       const cooldownMs = 60000;
@@ -64,7 +79,7 @@
       document.addEventListener('click', event => {
         if (!event.isTrusted || event.defaultPrevented || event.button !== 0 ||
             event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-        const trigger = event.target.closest?.('#download, nav a, .questions summary');
+        const trigger = event.target.closest?.('nav a, .questions summary');
         if (!trigger || trigger.disabled) return;
         const now = Date.now();
         if (state.count >= maxAds || (state.count > 0 && now - state.lastOpened < cooldownMs)) return;
