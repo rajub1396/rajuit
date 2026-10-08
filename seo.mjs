@@ -1,6 +1,6 @@
 import { apps } from './apps.mjs';
 
-export const siteOrigin = 'https://ryt-video-downloader-rldz.onrender.com';
+export const siteOrigin = 'https://www.rajuit.online';
 const escape = value => value.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 
 export const robots = `User-agent: *\nAllow: /\n\nSitemap: ${siteOrigin}/sitemap.xml\n`;

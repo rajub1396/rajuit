@@ -17,7 +17,7 @@ test('serves the website and an exact, resumable APK without exposing source fil
   const page = await fetch(origin);
   assert.equal(page.status, 200);
   const homepage = await page.text();
-  const siteOrigin = 'https://ryt-video-downloader-rldz.onrender.com';
+  const siteOrigin = 'https://www.rajuit.online';
   assert.ok(homepage.includes(`<link rel="canonical" href="${siteOrigin}/">`));
   const robots = await fetch(origin + '/robots.txt');
   assert.equal(robots.status, 200);
