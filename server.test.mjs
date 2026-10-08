@@ -25,7 +25,7 @@ test('serves the website and an exact, resumable APK without exposing source fil
     assert.match(html, /id="download"/);
     assert.match(html, /href="\/styles.css"/);
     assert.doesNotMatch(html, /\{\{\w+\}\}/);
-    assert.match(html, new RegExp(`data-available="${['ryt', 'rvpn', 'rplayer'].includes(slug)}"`));
+    assert.match(html, new RegExp(`data-available="${['ryt', 'rvpn', 'rplayer', 'rtik'].includes(slug)}"`));
   }
   assert.match(await (await fetch(origin + '/apps/ryt')).text(), /href="\/download\/RYT-universal.apk"/);
   assert.equal((await fetch(origin + '/apps/unknown')).status, 404);
@@ -41,6 +41,13 @@ test('serves the website and an exact, resumable APK without exposing source fil
   const playerDownload = await fetch(origin + '/download/RPlayer.apk');
   assert.equal(playerDownload.status, 200);
   assert.deepEqual(Buffer.from(await playerDownload.arrayBuffer()), playerExpected);
+  const tikExpected = readFileSync(new URL('downloads/RTik.apk', import.meta.url));
+  const tikPage = await (await fetch(origin + '/apps/rtik')).text();
+  assert.match(tikPage, /href="\/download\/RTik.apk"/);
+  const tikDownload = await fetch(origin + '/download/RTik.apk');
+  assert.equal(tikDownload.status, 200);
+  assert.equal(tikDownload.headers.get('content-disposition'), 'attachment; filename="RTik.apk"');
+  assert.deepEqual(Buffer.from(await tikDownload.arrayBuffer()), tikExpected);
   assert.equal((await fetch(origin + '/styles.css')).status, 200);
   assert.deepEqual(await (await fetch(origin + '/healthz')).json(), { status: 'ok' });
   assert.equal((await fetch(origin + '/server.mjs')).status, 404);
