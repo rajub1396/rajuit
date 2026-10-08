@@ -17,11 +17,26 @@ test('serves the website and an exact, resumable APK without exposing source fil
   const page = await fetch(origin);
   assert.equal(page.status, 200);
   const homepage = await page.text();
+  const siteOrigin = 'https://ryt-video-downloader-rldz.onrender.com';
+  assert.ok(homepage.includes(`<link rel="canonical" href="${siteOrigin}/">`));
+  const robots = await fetch(origin + '/robots.txt');
+  assert.equal(robots.status, 200);
+  assert.match(robots.headers.get('content-type'), /text\/plain/);
+  assert.ok((await robots.text()).includes(`Sitemap: ${siteOrigin}/sitemap.xml`));
+  const sitemap = await fetch(origin + '/sitemap.xml');
+  assert.equal(sitemap.status, 200);
+  assert.match(sitemap.headers.get('content-type'), /application\/xml/);
+  const xml = await sitemap.text();
+  assert.equal((xml.match(/<loc>/g) || []).length, 6);
+  assert.ok(xml.includes(`<loc>${siteOrigin}/</loc>`));
+  assert.equal(await (await fetch(origin + '/sitemap.xml', { method: 'HEAD' })).text(), '');
   for (const slug of ['ryt', 'rvpn', 'rplayer', 'rtik', 'rins']) {
     assert.match(homepage, new RegExp(`href="/apps/${slug}"`));
     const appPage = await fetch(origin + '/apps/' + slug);
     assert.equal(appPage.status, 200);
     const html = await appPage.text();
+    assert.ok(html.includes(`<link rel="canonical" href="${siteOrigin}/apps/${slug}">`));
+    assert.ok(xml.includes(`<loc>${siteOrigin}/apps/${slug}</loc>`));
     assert.match(html, /id="download"/);
     assert.match(html, /href="\/styles.css"/);
     assert.doesNotMatch(html, /\{\{\w+\}\}/);

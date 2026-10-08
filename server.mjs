@@ -3,6 +3,7 @@ import { createReadStream, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 import { apps, apkPath, apkSize, renderHome, renderApp } from './apps.mjs';
+import { robots, sitemap, searchMetadata } from './seo.mjs';
 
 const root = fileURLToPath(new URL('.', import.meta.url));
 const routes = new Map([
@@ -20,13 +21,22 @@ export function createApp({ downloadsDirectory } = {}) {
     let pathname;
     try { pathname = new URL(req.url, 'http://localhost').pathname; }
     catch { res.writeHead(400); return res.end('Bad request'); }
+    if (pathname === '/robots.txt' || pathname === '/sitemap.xml') {
+      const body = pathname === '/robots.txt' ? robots : sitemap;
+      res.writeHead(200, {
+        'Content-Type': pathname === '/robots.txt' ? 'text/plain; charset=utf-8' : 'application/xml; charset=utf-8',
+        'Content-Length': Buffer.byteLength(body),
+        'Cache-Control': 'public, max-age=300',
+      });
+      return res.end(req.method === 'HEAD' ? undefined : body);
+    }
     if (pathname === '/healthz') {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       return res.end(req.method === 'HEAD' ? undefined : '{"status":"ok"}');
     }
     const app = apps.find(item => pathname === `/apps/${item.slug}` || pathname === `/apps/${item.slug}/`);
     if (pathname === '/' || pathname === '/index.html' || app) {
-      const html = app ? renderApp(app, downloadsDirectory) : renderHome(downloadsDirectory);
+      const html = searchMetadata(app ? renderApp(app, downloadsDirectory) : renderHome(downloadsDirectory), app);
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache', 'Content-Length': Buffer.byteLength(html) });
       return res.end(req.method === 'HEAD' ? undefined : html);
     }
