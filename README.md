@@ -39,4 +39,4 @@ App names, descriptions, and filenames are configured in `apps.mjs`. All availab
 
 Existing ad placements are retained on the app download pages in `public/app.html`, with a native ad placement on the homepage. Actual ad delivery and earnings depend on the provider.
 
-Only the existing Smartlink is used for advertising. Each page contains one labeled sponsored offer link that opens in the same tab when clicked. Its box reappears six seconds after being closed. Native, banner and automatic popup scripts have been removed. The Smartlink is a destination URL rather than embedded ad artwork.
+The supplied Accountut provider script is loaded once on every page, alongside the existing Smartlink. Provider code determines its ad format and behavior; an embedded banner or video is not guaranteed. Each page contains one labeled sponsored offer link that opens in the same tab when clicked. Its box reappears six seconds after being closed. No extra automatic popup or repeated script-loading logic is added by this site. The Smartlink is a destination URL rather than embedded ad artwork.

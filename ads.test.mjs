@@ -8,9 +8,10 @@ import { apps, renderApp, renderHome } from './apps.mjs';
 
 test('inline ad closes and reappears after six seconds without opening tabs', () => {
  for(const page of [renderHome(), ...apps.map(app => renderApp(app))]) {
-  assert.doesNotMatch(page, /window\.open|setInterval|accountut\.com|bellnewyork\.org\/14\//);
+  assert.doesNotMatch(page, /window\.open|setInterval|bellnewyork\.org\/14\//);
+  assert.equal(page.split("<script data-cfasync=\"false\" src=\"https://accountut.com/1/a447b7f145cfe949d126e298b7f001e2\"></script>").length - 1, 1);
   assert.match(page, /class="ad-slot wrap inline-ad"/);
-  assert.doesNotMatch(page, /bellnewyork|accountut|atOptions|ad-slot-banner|container-d5b/);
+  assert.doesNotMatch(page, /bellnewyork|atOptions|ad-slot-banner|container-d5b/);
   assert.equal((page.match(/class="smartlink-offer"/g) || []).length, 1);
   assert.match(page, /href="https:\/\/auctionr.org\/4\/07c4573883eaaad1956ac62edd3f7a40" rel="sponsored nofollow noreferrer"/);
   const script=page.match(/<script>\s*\/\/ Inline ad box:[\s\S]*?<\/script>/)[0].replace(/^<script>/,'').replace(/<\/script>$/,'');
