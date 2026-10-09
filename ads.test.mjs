@@ -10,6 +10,13 @@ test('inline ad closes and reappears after six seconds without opening tabs', ()
  for(const page of [renderHome(), ...apps.map(app => renderApp(app))]) {
   assert.doesNotMatch(page, /window\.open|setInterval|accountut\.com|bellnewyork\.org\/14\//);
   assert.match(page, /class="ad-slot floating-ad"/);
+  assert.equal((page.match(/class="smartlink-banner"/g) || []).length, 9);
+  for (const banner of page.matchAll(/<a class="smartlink-banner"[^>]*>/g)) {
+    assert.match(banner[0], /href="https:\/\/auctionr.org\/4\/07c4573883eaaad1956ac62edd3f7a40"/);
+    assert.match(banner[0], /rel="sponsored nofollow noreferrer"/);
+    assert.doesNotMatch(banner[0], /target=/);
+  }
+  assert.equal((page.match(/id="container-d5b768305612c010e2c2ecf25d4d053a"/g) || []).length, 1);
   const script=page.match(/<script>\s*\/\/ Inline ad box:[\s\S]*?<\/script>/)[0].replace(/^<script>/,'').replace(/<\/script>$/,'');
   const box={hidden:false}, listeners={}; let close, timer, cleared=0;
   runInNewContext(script, {document:{querySelector: selector=>selector==='#ad-slot-1'?box:{addEventListener:(_,callback)=>close=callback}},window:{
