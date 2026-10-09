@@ -6,9 +6,9 @@ import { join } from 'node:path';
 import { runInNewContext } from 'node:vm';
 import { apps, renderApp, renderHome } from './apps.mjs';
 
-test('inline ad closes and reappears after six seconds without opening tabs', () => {
+test('inline ad closes and reappears after six seconds', () => {
  for(const page of [renderHome(), ...apps.map(app => renderApp(app))]) {
-  assert.doesNotMatch(page, /window\.open|setInterval|bellnewyork\.org\/14\//);
+  assert.doesNotMatch(page, /setInterval|bellnewyork\.org\/14\//);
   assert.equal(page.split("<script data-cfasync=\"false\" src=\"https://accountut.com/1/a447b7f145cfe949d126e298b7f001e2\"></script>").length - 1, 1);
   assert.match(page, /class="ad-slot wrap inline-ad"/);
   assert.doesNotMatch(page, /bellnewyork|atOptions|ad-slot-banner|container-d5b/);
@@ -105,4 +105,31 @@ test('unavailable APK buttons show a message without opening ads or downloading'
     capture({ button: 0, target: { closest: () => download }, preventDefault() {}, stopImmediatePropagation() {} });
     assert.match(hint.textContent, /coming soon/);
   }
+});
+
+
+test('Smartlink opens once per trusted control click without cancelling the control action', () => {
+ for (const page of [renderHome(), ...apps.map(app => renderApp(app))]) {
+  const scripts = page.match(/<script>\s*\/\/ Smartlink ads:[\s\S]*?<\/script>/g);
+  assert.equal(scripts.length, 1);
+  const script = scripts[0].replace(/^<script>/, '').replace(/<\/script>$/, '');
+  const opened = [];
+  let click;
+  runInNewContext(script, { window: {
+   addEventListener(type, listener, capture) { assert.equal(type, 'click'); assert.equal(capture, true); click = listener; },
+   open(...args) { opened.push(args); return null; }
+  }});
+  const control = { getAttribute: () => null, closest: () => null };
+  const event = { isTrusted: true, button: 0, target: { closest: () => control },
+   preventDefault() { assert.fail('Control action must remain available'); },
+   stopImmediatePropagation() { assert.fail('Other click handlers must remain available'); }
+  };
+  click(event); click(event);
+  assert.equal(opened.length, 2);
+  assert.deepEqual(opened[0], ['https://auctionr.org/4/07c4573883eaaad1956ac62edd3f7a40', '_blank', 'noopener,noreferrer']);
+  for (const override of [{ isTrusted: false }, { button: 1 }, { ctrlKey: true }, { metaKey: true }, { shiftKey: true }, { altKey: true }, { target: { closest: () => null } }]) click({ ...event, ...override });
+  control.disabled = true; click(event); control.disabled = false;
+  control.href = opened[0][0]; click(event);
+  assert.equal(opened.length, 2);
+ }
 });

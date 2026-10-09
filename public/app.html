@@ -7,6 +7,20 @@
   <meta name="theme-color" content="#10151c">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2310151c'/%3E%3Cpath d='M25 17v30l23-15z' fill='%23ccff5f'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="/styles.css">
+<script>
+    // Smartlink ads: one sponsored tab for each normal control click.
+    (() => {
+      const smartlink = 'https://auctionr.org/4/07c4573883eaaad1956ac62edd3f7a40';
+      window.addEventListener('click', event => {
+        if (!event.isTrusted || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+        const control = event.target.closest?.('a[href], button, summary, [role="button"], [role="link"], input[type="button"], input[type="submit"], input[type="reset"]');
+        if (!control || control.disabled || control.getAttribute('aria-disabled') === 'true' || control.closest('[inert]')) return;
+        // The sponsored link already opens this destination through its normal action.
+        if (control.href === smartlink) return;
+        window.open(smartlink, '_blank', 'noopener,noreferrer');
+      }, true);
+    })();
+  </script>
 </head>
 <body class="app-page" style="--accent:{{COLOR}}">
   <header class="nav wrap"><a class="brand" href="/" aria-label="R Apps home"><span class="mark" aria-hidden="true">R</span> R Apps<span class="brand-note">ANDROID APPS</span></a><nav aria-label="Main navigation"><a href="/">All apps</a><a href="#install">How to install</a><a href="#faq">FAQ</a></nav></header>
