@@ -39,4 +39,4 @@ App names, descriptions, and filenames are configured in `apps.mjs`. All availab
 
 Existing ad placements are retained on the app download pages in `public/app.html`, with a native ad placement on the homepage. Actual ad delivery and earnings depend on the provider.
 
-Each page uses the existing provider-served native ad below the hero and the existing 728x90 banner near the lower content. Smartlink text banners and automatic popup tabs are removed. The native placement can be closed and reappears after six seconds without refreshing the provider script. Ad creatives and delivery depend on the provider; additional distinct units require their own embed codes.
+Only the existing Smartlink is used for advertising. Each page contains one labeled sponsored offer link that opens in the same tab when clicked. Its box reappears six seconds after being closed. Native, banner and automatic popup scripts have been removed. The Smartlink is a destination URL rather than embedded ad artwork.

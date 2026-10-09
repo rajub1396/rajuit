@@ -17,3 +17,5 @@
 
 
 .inline-ad{position:relative;min-height:160px}.inline-ad>span{display:block;padding-right:40px}.inline-ad[hidden]{display:none!important}.close-ad{position:absolute;right:10px;top:10px;width:32px;height:32px;border:1px solid var(--line,#2b3441);border-radius:50%;background:var(--bg,#10151c);color:var(--ink,#f4f6f9);font-size:22px;cursor:pointer}.banner-scroll{max-width:100%;overflow-x:auto}.banner-placement{width:728px;min-height:90px;margin:12px auto 0}
+
+.smartlink-offer{display:inline-block;margin-top:14px;padding:12px 20px;border:1px solid var(--accent,#ccff5f);border-radius:10px;color:var(--accent,#ccff5f)}

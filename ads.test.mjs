@@ -10,10 +10,9 @@ test('inline ad closes and reappears after six seconds without opening tabs', ()
  for(const page of [renderHome(), ...apps.map(app => renderApp(app))]) {
   assert.doesNotMatch(page, /window\.open|setInterval|accountut\.com|bellnewyork\.org\/14\//);
   assert.match(page, /class="ad-slot wrap inline-ad"/);
-  assert.doesNotMatch(page, /smartlink-banner|View sponsored offer|auctionr\.org/);
-  assert.equal((page.match(/id="ad-slot-banner"/g) || []).length, 1);
-  assert.match(page, /bellnewyork\.org\/22\/b5674928314795863ff1c9be73ca0078/);
-  assert.equal((page.match(/id="container-d5b768305612c010e2c2ecf25d4d053a"/g) || []).length, 1);
+  assert.doesNotMatch(page, /bellnewyork|accountut|atOptions|ad-slot-banner|container-d5b/);
+  assert.equal((page.match(/class="smartlink-offer"/g) || []).length, 1);
+  assert.match(page, /href="https:\/\/auctionr.org\/4\/07c4573883eaaad1956ac62edd3f7a40" rel="sponsored nofollow noreferrer"/);
   const script=page.match(/<script>\s*\/\/ Inline ad box:[\s\S]*?<\/script>/)[0].replace(/^<script>/,'').replace(/<\/script>$/,'');
   const box={hidden:false}, listeners={}; let close, timer, cleared=0;
   runInNewContext(script, {document:{querySelector: selector=>selector==='#ad-slot-1'?box:{addEventListener:(_,callback)=>close=callback}},window:{
@@ -40,7 +39,7 @@ test('every available app shows an inline ad first and downloads its own APK sec
     assert.equal(href, `/download/${app.file}`);
     const script = page.match(/<script>\s*\/\/ Additional[\s\S]*?<\/script>/)[0]
       .replace(/^<script>/, '').replace(/<\/script>$/, '');
-    assert.ok(page.indexOf('// Additional') < page.indexOf('src="https://'));
+    assert.ok(page.indexOf('// Additional') < page.indexOf('class="smartlink-offer"'));
     for (const blocked of [false, true]) {
       let capture, ads = 0;
       const downloads = [];
