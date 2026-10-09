@@ -39,10 +39,4 @@ App names, descriptions, and filenames are configured in `apps.mjs`. All availab
 
 Existing ad placements are retained on the app download pages in `public/app.html`, with a native ad placement on the homepage. Actual ad delivery and earnings depend on the provider.
 
-Additional click-triggered ads use the existing sponsored URL on main navigation and FAQ clicks: up to three attempts per tab session, at least 60 seconds apart. Browser settings control ad opening and placement. Existing provider scripts serve ads independently of this limit.
-
-Download APK uses a two-click flow per page load: the first click attempts to open the sponsored ad, and the second starts the download. A blocked ad does not prevent the second click from downloading. Subsequent download clicks do not trigger the extra ad handler.
-
-Apps without APK files show a coming-soon message when their download button is clicked. They do not attempt an ad or download a different app's file.
-
-Every HTML page attempts to open the existing Smartlink on load and every six seconds while visible. Leaving the page clears the timer; returning through browser history restarts it. Browser popup settings may block automatic attempts. This interval does not detect popup closure or close ad tabs. The existing download click flow remains in place.
+The existing native ad placement appears in a small fixed box on every page. Close hides the box; it reappears after six seconds. The same placement is retained rather than requesting fresh ads on a timer. Download APK first shows the inline box, then starts the APK download on the second click. Unavailable APKs show a coming-soon message. Automatic Smartlink tabs and additional popup scripts have been removed. Actual ad content and delivery depend on the provider.

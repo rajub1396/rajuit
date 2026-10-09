@@ -21,7 +21,6 @@
   <script>
     // Additional click-triggered ads; browser settings determine placement.
     (() => {
-      const adUrl = 'https://auctionr.org/4/07c4573883eaaad1956ac62edd3f7a40';
       const download = document.querySelector('#download');
       let downloadReady = false;
       window.addEventListener('click', event => {
@@ -40,37 +39,17 @@
         }
         downloadReady = true;
         download.innerHTML = '<span aria-hidden="true">&darr;</span> Click again to download APK';
-        document.querySelector('#download-hint').textContent = 'Ad opened or blocked by your browser. Click again to start your APK download.';
-        try { window.open(adUrl, '_blank', 'noopener,noreferrer'); } catch {}
+        document.querySelector('#download-hint').textContent = 'Advertisement shown on this page. Click again to start your APK download.';
+        window.dispatchEvent(new Event('show-inline-ad'));
       }, true);
-      const storageKey = 'ryt-extra-popunders';
-      const maxAds = 3;
-      const cooldownMs = 60000;
-      let state = { count: 0, lastOpened: 0 };
-      try {
-        const saved = JSON.parse(sessionStorage.getItem(storageKey));
-        if (saved && Number.isInteger(saved.count) && saved.count >= 0 &&
-            Number.isFinite(saved.lastOpened) && saved.lastOpened >= 0) state = saved;
-      } catch {}
-      document.addEventListener('click', event => {
-        if (!event.isTrusted || event.defaultPrevented || event.button !== 0 ||
-            event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-        const trigger = event.target.closest?.('nav a, .questions summary');
-        if (!trigger || trigger.disabled) return;
-        const now = Date.now();
-        if (state.count >= maxAds || (state.count > 0 && now - state.lastOpened < cooldownMs)) return;
-        // Count blocked attempts too to avoid retrying on every click.
-        state = { count: state.count + 1, lastOpened: now };
-        try { sessionStorage.setItem(storageKey, JSON.stringify(state)); } catch {}
-        try { window.open(adUrl, '_blank', 'noopener,noreferrer'); } catch {}
-      });
     })();
   </script>
-    <div class="ad-slot wrap" id="ad-slot-1" aria-label="Advertisement">
+    <aside class="ad-slot floating-ad" id="ad-slot-1" aria-label="Advertisement">
+      <button type="button" id="close-ad" class="close-ad" aria-label="Close advertisement">&times;</button>
       <span>Advertisement</span>
       <script async="async" data-cfasync="false" src="https://bellnewyork.org/21/d5b768305612c010e2c2ecf25d4d053a"></script>
       <div id="container-d5b768305612c010e2c2ecf25d4d053a"></div>
-    </div>
+    </aside>
     <section class="install wrap" id="install" aria-labelledby="install-title"><div class="section-heading"><p class="eyebrow">GETTING STARTED</p><h2 id="install-title">On your phone in three steps.</h2><p>You install this app using an APK file.</p></div><div class="steps"><article><span class="step-number">01</span><h3>Download the APK</h3><p>Tap Download APK above. Wait for the file to finish downloading, then find <strong>{{FILE}}</strong> in your Downloads folder.</p></article><article><span class="step-number">02</span><h3>Allow installation</h3><p>If Android asks, open Settings and allow “Install unknown apps” for the browser or file manager you’re using. Only install files from sources you trust.</p></article><article><span class="step-number">03</span><h3>Install & open</h3><p>Open the APK and tap Install. Once installation finishes, open {{NAME}}. You can turn the installation permission off again afterward.</p></article></div></section>
     <div class="ad-slot wrap" id="ad-slot-2" aria-label="Advertisement">
       <span>Advertisement</span>
@@ -95,28 +74,21 @@
     </div>
     <section class="faq wrap" id="faq" aria-labelledby="faq-title"><div><p class="eyebrow">GOOD TO KNOW</p><h2 id="faq-title">A few quick answers.</h2></div><div class="questions"><details><summary>What is an Android APK?</summary><p>An APK is an Android installation file. Download it, then open it on your Android device to install the app.</p></details><details><summary>Can I install {{NAME}} on an iPhone?</summary><p>No. This APK is for Android devices. iPhones cannot install Android APK files.</p></details><details><summary>Where is my downloaded file?</summary><p>Look in your browser’s Downloads list or the Downloads folder in your file manager. The file is named {{FILE}}.</p></details><details><summary>What if the download or installation fails?</summary><p>Check your internet connection and available storage, then try again. If Android says the app is incompatible, this release may not support your device. Do not bypass device security warnings.</p></details><details><summary>What if an APK is coming soon?</summary><p>The download button will become available when the app is released here. Check this page again later.</p></details></div></section>
   </main><footer class="wrap"><a class="brand" href="/">R Apps</a><p>{{CATEGORY}} for Android</p><a href="#install">Installation guide</a></footer>
-  <script data-cfasync="false" src="https://bellnewyork.org/14/2419643dbfd45818eb2bf8d3c0adaae5"></script>
-  <script data-cfasync="false" src="https://accountut.com/1/a447b7f145cfe949d126e298b7f001e2"></script>
 <script>
-    // Smartlink: opening attempts six seconds apart while this page is visible.
+    // Inline ad box: reopen six seconds after dismissal.
     (() => {
+      const box = document.querySelector('#ad-slot-1');
+      const close = document.querySelector('#close-ad');
       let timer;
-      const openAd = () => {
-        if (document.hidden) return;
-        try { window.open('https://auctionr.org/4/07c4573883eaaad1956ac62edd3f7a40', '_blank', 'noopener,noreferrer'); } catch {}
-      };
-      const start = () => {
-        if (timer !== undefined) return;
-        openAd();
-        timer = window.setInterval(openAd, 6000);
-      };
-      window.addEventListener('pagehide', () => {
-        window.clearInterval(timer);
-        timer = undefined;
+      const show = () => { window.clearTimeout(timer); timer = undefined; box.hidden = false; };
+      close.addEventListener('click', () => {
+        box.hidden = true;
+        window.clearTimeout(timer);
+        timer = window.setTimeout(show, 6000);
       });
-      window.addEventListener('pageshow', event => { if (event.persisted) start(); });
-      if (document.readyState === 'complete') start();
-      else window.addEventListener('load', start, { once: true });
+      window.addEventListener('show-inline-ad', show);
+      window.addEventListener('pagehide', () => { window.clearTimeout(timer); timer = undefined; });
+      window.addEventListener('pageshow', event => { if (event.persisted) show(); });
     })();
   </script>
 </body></html>

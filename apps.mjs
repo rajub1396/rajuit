@@ -58,7 +58,7 @@ export function renderApp(app, directory) {
     FILE: app.file, ICON: app.icon, COLOR: app.color,
     SIZE: available ? `${(size / 1000000).toFixed(1)} MB` : 'Coming soon',
     AVAILABLE: String(available),
-    HINT: available ? 'First click opens an ad. Click again to download the APK.' : 'The APK will be added soon. Your download button is ready here.',
+    HINT: available ? 'First click shows the ad box. Click again to download the APK.' : 'The APK will be added soon. Your download button is ready here.',
     RELEASE_FOOT: available ? 'Ready to download and install.' : 'APK not yet available.'
   };
   return appTemplate.replace('{{APP_ICON}}', appIcon(app.slug)).replace(/\{\{(\w+)\}\}/g, (_, key) => escape(values[key]));

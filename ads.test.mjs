@@ -6,43 +6,26 @@ import { join } from 'node:path';
 import { runInNewContext } from 'node:vm';
 import { apps, renderApp, renderHome } from './apps.mjs';
 
-test('Smartlink repeats every six seconds, pauses in hidden pages and stops on departure', () => {
-  for (const page of [renderHome(), ...apps.map(app => renderApp(app))]) {
-    const script = page.match(/<script>\s*\/\/ Smartlink:[\s\S]*?<\/script>/)[0]
-      .replace(/^<script>/, '').replace(/<\/script>$/, '');
-    for (const readyState of ['loading', 'complete']) {
-      for (const blocked of [false, true]) {
-        const listeners = {};
-        const document = { readyState, hidden: false };
-        let attempts = 0, tick, clears = 0;
-        runInNewContext(script, { document, window: {
-          addEventListener(event, callback) { listeners[event] = callback; },
-          setInterval(callback, delay) { assert.equal(delay, 6000); tick = callback; return 1; },
-          clearInterval(id) { assert.equal(id, 1); clears++; tick = undefined; },
-          open(url, target, features) {
-            attempts++;
-            assert.equal(url, 'https://auctionr.org/4/07c4573883eaaad1956ac62edd3f7a40');
-            assert.equal(target, '_blank');
-            assert.equal(features, 'noopener,noreferrer');
-            if (blocked) throw new Error('Blocked');
-          }
-        }});
-        if (readyState === 'loading') { assert.equal(attempts, 0); listeners.load(); listeners.load(); }
-        assert.equal(attempts, 1);
-        tick(); assert.equal(attempts, 2);
-        document.hidden = true;
-        tick(); assert.equal(attempts, 2);
-        document.hidden = false;
-        tick(); assert.equal(attempts, 3);
-        listeners.pagehide(); assert.equal(clears, 1); assert.equal(tick, undefined);
-        listeners.pageshow({persisted: true}); assert.equal(attempts, 4);
-        tick(); assert.equal(attempts, 5);
-      }
-    }
-  }
+test('inline ad closes and reappears after six seconds without opening tabs', () => {
+ for(const page of [renderHome(), ...apps.map(app => renderApp(app))]) {
+  assert.doesNotMatch(page, /window\.open|setInterval|accountut\.com|bellnewyork\.org\/14\//);
+  assert.match(page, /class="ad-slot floating-ad"/);
+  const script=page.match(/<script>\s*\/\/ Inline ad box:[\s\S]*?<\/script>/)[0].replace(/^<script>/,'').replace(/<\/script>$/,'');
+  const box={hidden:false}, listeners={}; let close, timer, cleared=0;
+  runInNewContext(script, {document:{querySelector: selector=>selector==='#ad-slot-1'?box:{addEventListener:(_,callback)=>close=callback}},window:{
+   addEventListener:(name,callback)=>listeners[name]=callback,
+   setTimeout(callback,delay){assert.equal(delay,6000);timer=callback;return 1;},
+   clearTimeout(){cleared++;timer=undefined;}
+  }});
+  close();assert.equal(box.hidden,true);assert.ok(timer);
+  timer();assert.equal(box.hidden,false);
+  close();listeners['show-inline-ad']();assert.equal(box.hidden,false);assert.equal(timer,undefined);
+  close();listeners.pagehide();assert.equal(timer,undefined);assert.ok(cleared);
+  listeners.pageshow({persisted:true});assert.equal(box.hidden,false);
+ }
 });
 
-test('every available app opens an ad first and downloads its own APK second, even when ads are blocked', t => {
+test('every available app shows an inline ad first and downloads its own APK second', t => {
   const directory = mkdtempSync(join(tmpdir(), 'r-app-click-test-'));
   t.after(() => rmSync(directory, { recursive: true, force: true }));
   for (const app of apps) {
@@ -60,13 +43,14 @@ test('every available app opens an ad first and downloads its own APK second, ev
       const download = { href, dataset: { available: 'true' } };
       const hint = {};
       runInNewContext(script, {
+        Event: class { constructor(type) { this.type = type; } },
         document: {
           querySelector: selector => selector === '#download' ? download : hint,
           addEventListener() {}
         },
         window: {
           addEventListener: (_, listener) => capture = listener,
-          open() { ads++; if (blocked) throw new Error('Blocked'); },
+          dispatchEvent(event) { assert.equal(event.type, 'show-inline-ad'); ads++; },
           location: { assign: url => downloads.push(url) }
         },
         sessionStorage: { getItem: () => null },
@@ -109,7 +93,7 @@ test('unavailable APK buttons show a message without opening ads or downloading'
       document: { querySelector: selector => selector === '#download' ? download : hint, addEventListener() {} },
       window: {
         addEventListener: (_, listener) => capture = listener,
-        open() { assert.fail('An unavailable APK must not open an ad'); },
+        dispatchEvent() { assert.fail('An unavailable APK must not show an ad'); },
         location: { assign() { assert.fail('An unavailable APK must not start a download'); } }
       },
       sessionStorage: { getItem: () => null }
