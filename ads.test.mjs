@@ -4,7 +4,43 @@ import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { runInNewContext } from 'node:vm';
-import { apps, renderApp } from './apps.mjs';
+import { apps, renderApp, renderHome } from './apps.mjs';
+
+test('Smartlink repeats every six seconds, pauses in hidden pages and stops on departure', () => {
+  for (const page of [renderHome(), ...apps.map(app => renderApp(app))]) {
+    const script = page.match(/<script>\s*\/\/ Smartlink:[\s\S]*?<\/script>/)[0]
+      .replace(/^<script>/, '').replace(/<\/script>$/, '');
+    for (const readyState of ['loading', 'complete']) {
+      for (const blocked of [false, true]) {
+        const listeners = {};
+        const document = { readyState, hidden: false };
+        let attempts = 0, tick, clears = 0;
+        runInNewContext(script, { document, window: {
+          addEventListener(event, callback) { listeners[event] = callback; },
+          setInterval(callback, delay) { assert.equal(delay, 6000); tick = callback; return 1; },
+          clearInterval(id) { assert.equal(id, 1); clears++; tick = undefined; },
+          open(url, target, features) {
+            attempts++;
+            assert.equal(url, 'https://auctionr.org/4/07c4573883eaaad1956ac62edd3f7a40');
+            assert.equal(target, '_blank');
+            assert.equal(features, 'noopener,noreferrer');
+            if (blocked) throw new Error('Blocked');
+          }
+        }});
+        if (readyState === 'loading') { assert.equal(attempts, 0); listeners.load(); listeners.load(); }
+        assert.equal(attempts, 1);
+        tick(); assert.equal(attempts, 2);
+        document.hidden = true;
+        tick(); assert.equal(attempts, 2);
+        document.hidden = false;
+        tick(); assert.equal(attempts, 3);
+        listeners.pagehide(); assert.equal(clears, 1); assert.equal(tick, undefined);
+        listeners.pageshow({persisted: true}); assert.equal(attempts, 4);
+        tick(); assert.equal(attempts, 5);
+      }
+    }
+  }
+});
 
 test('every available app opens an ad first and downloads its own APK second, even when ads are blocked', t => {
   const directory = mkdtempSync(join(tmpdir(), 'r-app-click-test-'));

@@ -34,7 +34,12 @@ export function createApp({ downloadsDirectory } = {}) {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       return res.end(req.method === 'HEAD' ? undefined : '{"status":"ok"}');
     }
-    const app = apps.find(item => pathname === `/apps/${item.slug}` || pathname === `/apps/${item.slug}/`);
+    const legacyApp = apps.find(item => pathname === `/apps/${item.slug}` || pathname === `/apps/${item.slug}/` || pathname === `/${item.slug}-download/`);
+    if (legacyApp) {
+      res.writeHead(301, { Location: `/${legacyApp.slug}-download` });
+      return res.end();
+    }
+    const app = apps.find(item => pathname === `/${item.slug}-download`);
     if (pathname === '/' || pathname === '/index.html' || app) {
       const html = searchMetadata(app ? renderApp(app, downloadsDirectory) : renderHome(downloadsDirectory), app);
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache', 'Content-Length': Buffer.byteLength(html) });

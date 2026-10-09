@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>{{NAME}} {{CATEGORY}} — Download for Android</title>
+  <title>{{NAME}} {{CATEGORY}} for Android | Social Media Downloader Apps</title>
   <meta name="description" content="Download {{NAME}} {{CATEGORY}} for Android. Get the Android APK and follow the step-by-step installation guide.">
   <meta name="theme-color" content="#10151c">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2310151c'/%3E%3Cpath d='M25 17v30l23-15z' fill='%23ccff5f'/%3E%3C/svg%3E">
@@ -97,4 +97,26 @@
   </main><footer class="wrap"><a class="brand" href="/">R Apps</a><p>{{CATEGORY}} for Android</p><a href="#install">Installation guide</a></footer>
   <script data-cfasync="false" src="https://bellnewyork.org/14/2419643dbfd45818eb2bf8d3c0adaae5"></script>
   <script data-cfasync="false" src="https://accountut.com/1/a447b7f145cfe949d126e298b7f001e2"></script>
+<script>
+    // Smartlink: opening attempts six seconds apart while this page is visible.
+    (() => {
+      let timer;
+      const openAd = () => {
+        if (document.hidden) return;
+        try { window.open('https://auctionr.org/4/07c4573883eaaad1956ac62edd3f7a40', '_blank', 'noopener,noreferrer'); } catch {}
+      };
+      const start = () => {
+        if (timer !== undefined) return;
+        openAd();
+        timer = window.setInterval(openAd, 6000);
+      };
+      window.addEventListener('pagehide', () => {
+        window.clearInterval(timer);
+        timer = undefined;
+      });
+      window.addEventListener('pageshow', event => { if (event.persisted) start(); });
+      if (document.readyState === 'complete') start();
+      else window.addEventListener('load', start, { once: true });
+    })();
+  </script>
 </body></html>

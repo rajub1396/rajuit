@@ -27,11 +27,11 @@ Place each APK in `downloads/` using the exact filename below, then commit and p
 
 | App | Page | APK file |
 | --- | --- | --- |
-| RYT | `/apps/ryt` | `downloads/RYT-universal.apk` |
-| RVpn | `/apps/rvpn` | `downloads/RVpn.apk` |
-| RPlayer | `/apps/rplayer` | `downloads/RPlayer.apk` |
-| RTik | `/apps/rtik` | `downloads/RTik.apk` |
-| RIns | `/apps/rins` | `downloads/RIns.apk` |
+| RYT | `/ryt-download` | `downloads/RYT-universal.apk` |
+| RVpn | `/rvpn-download` | `downloads/RVpn.apk` |
+| RPlayer | `/rplayer-download` | `downloads/RPlayer.apk` |
+| RTik | `/rtik-download` | `downloads/RTik.apk` |
+| RIns | `/rins-download` | `downloads/RIns.apk` |
 
 App names, descriptions, and filenames are configured in `apps.mjs`. All available APKs support direct downloads, HEAD requests, and resumable byte ranges. Unknown files and source files remain inaccessible.
 
@@ -44,3 +44,5 @@ Additional click-triggered ads use the existing sponsored URL on main navigation
 Download APK uses a two-click flow per page load: the first click attempts to open the sponsored ad, and the second starts the download. A blocked ad does not prevent the second click from downloading. Subsequent download clicks do not trigger the extra ad handler.
 
 Apps without APK files show a coming-soon message when their download button is clicked. They do not attempt an ad or download a different app's file.
+
+Every HTML page attempts to open the existing Smartlink on load and every six seconds while visible. Leaving the page clears the timer; returning through browser history restarts it. Browser popup settings may block automatic attempts. This interval does not detect popup closure or close ad tabs. The existing download click flow remains in place.
