@@ -8,10 +8,17 @@ import { apps, renderApp, renderHome } from './apps.mjs';
 
 test('inline ad closes and reappears after six seconds', () => {
  for(const page of [renderHome(), ...apps.map(app => renderApp(app))]) {
-  assert.doesNotMatch(page, /setInterval|bellnewyork\.org\/14\//);
+  assert.doesNotMatch(page, /setInterval/);
   assert.equal(page.split("<script data-cfasync=\"false\" src=\"https://accountut.com/1/a447b7f145cfe949d126e298b7f001e2\"></script>").length - 1, 1);
   assert.match(page, /class="ad-slot wrap inline-ad"/);
-  assert.doesNotMatch(page, /bellnewyork|atOptions|ad-slot-banner|container-d5b/);
+  for (const source of [
+   'https://bellnewyork.org/21/d5b768305612c010e2c2ecf25d4d053a',
+   'https://bellnewyork.org/22/b5674928314795863ff1c9be73ca0078',
+   'https://bellnewyork.org/14/2419643dbfd45818eb2bf8d3c0adaae5'
+  ]) assert.equal(page.split('src="' + source + '"').length - 1, 1);
+  assert.equal(page.split('id="container-d5b768305612c010e2c2ecf25d4d053a"').length - 1, 1);
+  assert.equal(page.split('id="ad-slot-banner"').length - 1, 1);
+  assert.match(page, /height: 90, width: 728/);
   assert.equal((page.match(/class="smartlink-offer"/g) || []).length, 1);
   assert.match(page, /href="https:\/\/auctionr.org\/4\/07c4573883eaaad1956ac62edd3f7a40" rel="sponsored nofollow noreferrer"/);
   const script=page.match(/<script>\s*\/\/ Inline ad box:[\s\S]*?<\/script>/)[0].replace(/^<script>/,'').replace(/<\/script>$/,'');
