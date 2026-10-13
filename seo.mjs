@@ -10,7 +10,7 @@ export function searchMetadata(html, app) {
   const canonical = siteOrigin + (app ? `/${app.slug}-download` : '/');
   const verification = process.env.GOOGLE_SITE_VERIFICATION;
   const title = app ? `${app.name} ${app.category} for Android | Social Media Downloader Apps` : 'Social Media Downloader Apps for Android | R Apps';
-  const description = app ? `${app.description} Check APK availability and learn how to install on Android.` : 'Explore YouTube, TikTok and Instagram video downloader apps for Android, plus RVpn VPN and RPlayer video player.';
+  const description = app ? `${app.description} Check APK availability and learn how to install on Android.` : 'Explore YouTube, Facebook, TikTok and Instagram video downloader apps for Android, plus RVpn VPN and RPlayer video player.';
   const structured = app ? {
     '@context': 'https://schema.org', '@type': 'SoftwareApplication',
     name: app.name, applicationCategory: app.slug === 'rvpn' ? 'UtilitiesApplication' : 'MultimediaApplication',

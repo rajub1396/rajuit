@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 
 export const apps = [
   { slug: 'ryt', name: 'RYT', category: 'YouTube Video Downloader', file: 'RYT-universal.apk', icon: '▶', color: '#ccff5f', description: 'Download YouTube videos with RYT on your Android device.' },
+  { slug: 'rfb', name: 'RFB', category: 'Facebook Video Downloader', file: 'RFB-universal.apk', icon: 'f', color: '#79aaff', description: 'Download Facebook videos with RFB on your Android device.' },
   { slug: 'rvpn', name: 'RVpn', category: 'VPN', file: 'RVpn.apk', icon: 'V', color: '#86baff', description: 'Get RVpn for your Android device.' },
   { slug: 'rplayer', name: 'RPlayer', category: 'Video Player', file: 'RPlayer.apk', icon: '▷', color: '#c7a0ff', description: 'Play videos with RPlayer on your Android device.' },
   { slug: 'rtik', name: 'RTik', category: 'TikTok Video Downloader', file: 'RTik.apk', icon: 'T', color: '#ff99b0', description: 'Download TikTok videos with RTik on your Android device.' },
@@ -13,6 +14,7 @@ export const apps = [
 export function appIcon(slug) {
   const paths = {
     ryt: '<rect x="3" y="6" width="26" height="20" rx="6"/><path d="m13 11 8 5-8 5V11Z" fill="currentColor" stroke="none"/>',
+    rfb: '<path d="M19 28V17h5l1-5h-6V9c0-2 1-3 3-3h3V2h-4c-5 0-8 3-8 7v3H9v5h4v11"/>',
     rvpn: '<path d="M16 3 27 7v8c0 7-11 14-11 14S5 22 5 15V7l11-4Z"/><path d="m11 15 3 3 7-7"/>',
     rplayer: '<rect x="4" y="6" width="24" height="20" rx="5"/><path d="m13 11 7 5-7 5v-10Z" fill="currentColor" stroke="none"/>',
     rtik: '<path d="M19 5v16a6 6 0 1 1-6-6M19 5c1 6 5 8 9 8"/>',
