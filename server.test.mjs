@@ -46,7 +46,7 @@ test('serves the website and an exact, resumable APK without exposing source fil
     assert.match(html, /id="download"/);
     assert.match(html, /href="\/styles.css"/);
     assert.doesNotMatch(html, /\{\{\w+\}\}/);
-    assert.match(html, new RegExp(`data-available="${['ryt', 'rfb', 'rvpn', 'rplayer', 'rtik'].includes(slug)}"`));
+    assert.match(html, /data-available="true"/);
   }
   assert.match(await (await fetch(origin + '/ryt-download')).text(), /href="\/download\/RYT-universal.apk"/);
   assert.equal((await fetch(origin + '/apps/unknown')).status, 404);
@@ -78,6 +78,17 @@ test('serves the website and an exact, resumable APK without exposing source fil
   assert.equal(fbPartial.status, 206);
   assert.deepEqual(Buffer.from(await fbPartial.arrayBuffer()), fbExpected.subarray(0, 1024));
   assert.equal((await fetch(origin + '/styles.css')).status, 200);
+  const insExpected = readFileSync(new URL('downloads/RIns.apk', import.meta.url));
+  const insPage = await (await fetch(origin + '/rins-download')).text();
+  assert.match(insPage, /href="\/download\/RIns.apk"/);
+  assert.match(insPage, /57\.0 MB/);
+  const insDownload = await fetch(origin + '/download/RIns.apk');
+  assert.equal(insDownload.status, 200);
+  assert.equal(insDownload.headers.get('content-disposition'), 'attachment; filename="RIns.apk"');
+  assert.deepEqual(Buffer.from(await insDownload.arrayBuffer()), insExpected);
+  const insPartial = await fetch(origin + '/download/RIns.apk', { headers: { Range: 'bytes=0-1023' } });
+  assert.equal(insPartial.status, 206);
+  assert.deepEqual(Buffer.from(await insPartial.arrayBuffer()), insExpected.subarray(0, 1024));
   assert.deepEqual(await (await fetch(origin + '/healthz')).json(), { status: 'ok' });
   assert.equal((await fetch(origin + '/server.mjs')).status, 404);
   assert.equal((await fetch(origin + '/downloads/RYT-universal.apk')).status, 404);

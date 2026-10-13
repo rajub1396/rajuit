@@ -1,6 +1,6 @@
 # R Apps — Node.js + Render
 
-A Node.js Android app collection for RYT, RFB, RVpn, RPlayer, RTik, and RIns. The homepage links to a separate APK download page for every app. RYT, RFB, RVpn, RPlayer, and RTik are available now; RIns keeps its download button and shows Coming soon until its file is added. No runtime dependencies are installed.
+A Node.js Android app collection for RYT, RFB, RVpn, RPlayer, RTik, and RIns. The homepage links to a separate APK download page for every app. All six apps are available now. No runtime dependencies are installed.
 
 ## Run locally
 
